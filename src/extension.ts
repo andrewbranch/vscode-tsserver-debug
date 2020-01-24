@@ -1,27 +1,22 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { findFreePort } from "./lib/findFreePort";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	context.subscriptions.push(
+		vscode.commands.registerCommand("io.wheream.vscode-tsserver-debug.restart-with-debugging", restartWithDebuggingEnabled)
+	);
+}
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "tsserver-debug" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
-	});
-
-	context.subscriptions.push(disposable);
+async function restartWithDebuggingEnabled() {
+	const port = String(await findFreePort(9559, 1000, 1000));
+	process.env.TSS_DEBUG = port;
+	try {
+		await vscode.commands.executeCommand("typescript.restartTsServer");
+		return vscode.window.showInformationMessage(`TS Server listening on port ${port}.`);
+	} catch {
+		return vscode.window.showWarningMessage(`TS Server was not running. If this window starts TS Server later, it will start listening on port ${port}.`);
+	}
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

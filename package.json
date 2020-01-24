@@ -1,5 +1,5 @@
 {
-	"name": "tsserver-debug",
+	"name": "vscode-tsserver-debug",
 	"displayName": "TS Server Debug",
 	"description": "Adds a command to restart the TypeScript language server process with a debug port open",
 	"version": "0.0.1",
@@ -10,16 +10,28 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onLanguage:javascript",
+		"onLanguage:javascriptreact",
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact",
+		"workspaceContains:**/tsconfig.json",
+		"workspaceContains:**/jsconfig.json"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging",
+         "title": "Restart TS Server with debugging enabled"
 			}
-		]
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
