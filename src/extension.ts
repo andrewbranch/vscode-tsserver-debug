@@ -8,13 +8,21 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function restartWithDebuggingEnabled() {
-	const port = String(await findFreePort(9559, 1000, 1000));
-	process.env.TSS_DEBUG = port;
-	try {
-		await vscode.commands.executeCommand("typescript.restartTsServer");
-		return vscode.window.showInformationMessage(`TS Server listening on port ${port}.`);
-	} catch {
-		return vscode.window.showWarningMessage(`TS Server was not running. If this window starts TS Server later, it will start listening on port ${port}.`);
+	const config = vscode.workspace.getConfiguration("tsserver-debug");
+	const timeout = Math.max(1000, config.get("discoveryTimeout", 3000));
+	const debugPort = config.get("debugPort", 9559);
+	const port = await findFreePort(debugPort, 1000, timeout);
+	if (port) {
+		process.env.TSS_DEBUG = String(port);
+		try {
+			await vscode.commands.executeCommand("typescript.restartTsServer");
+			await vscode.window.showInformationMessage(`TS Server listening on port ${port}.`);
+		} catch {
+			await vscode.window.showWarningMessage(`TS Server was not running. If this window starts TS Server later, it will start listening on port ${port}.`);
+		}
+	}
+	else {
+		await vscode.window.showErrorMessage(`Timeout elapsed prior to discovering an open port to use for debugging.`);
 	}
 }
 

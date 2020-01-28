@@ -24,10 +24,26 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "TS Server Debug",
+			"properties": {
+				"tsserver-debug.discoveryTimeout": {
+					"type": "integer",
+					"default": 3000,
+					"description": "The number of milliseconds to wait to discover an port that can be used for remote debugging."
+				},
+				"tsserver-debug.debugPort": {
+					"type": "integer",
+					"default": 9559,
+					"description": "The default debug port to use."
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging",
-         "title": "Restart TS Server with debugging enabled"
+				"title": "Restart TS server with debugging enabled",
+				"category": "TypeScript"
 			}
 		],
 		"menus": {
