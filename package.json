@@ -42,16 +42,13 @@
 		"commands": [
 			{
 				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging",
-<<<<<<< HEAD
-				"title": "Restart TS server with debugging enabled",
+				"title": "Restart TS Server with debugging enabled",
 				"category": "TypeScript"
-=======
-         "title": "Restart TS Server with debugging enabled"
 			},
 			{
 				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging-brk",
-         "title": "Restart TS Server with debugging enabled and pause startup"
->>>>>>> Add new command for TSSERVER_DEBUG_BRK
+				"title": "Restart TS Server with debugging enabled and pause startup",
+				"category": "TypeScript"
 			}
 		],
 		"menus": {
