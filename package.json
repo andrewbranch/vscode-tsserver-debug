@@ -2,7 +2,7 @@
 	"name": "vscode-tsserver-debug",
 	"displayName": "TS Server Debug",
 	"description": "Adds a command to restart the TypeScript language server process with a debug port open",
-	"version": "1.0.0",
+	"version": "1.2.0",
 	"publisher": "andrewbranch",
 	"engines": {
 		"vscode": "^1.41.0"
@@ -27,11 +27,11 @@
 		"commands": [
 			{
 				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging",
-         "title": "Restart TS Server with debugging enabled"
+				"title": "Restart TS Server with debugging enabled"
 			},
 			{
 				"command": "io.wheream.vscode-tsserver-debug.restart-with-debugging-brk",
-         "title": "Restart TS Server with debugging enabled and pause startup"
+				"title": "Restart TS Server with debugging enabled and pause startup"
 			}
 		],
 		"menus": {
