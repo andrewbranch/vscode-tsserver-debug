@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import { findFreePort } from "./lib/findFreePort";
+import { findFreePort } from "./lib/findFreePort.js";
+
+const tsserverPattern = /[\\/]tsserver\.js\b/;
+const syntaxServerPattern = / --serverMode (?:partialSemantic|syntactic)\b/i;
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -19,7 +22,8 @@ async function restartWithDebuggingEnabled(brk?: boolean) {
 		process.env[varName] = String(port);
 		try {
 			await vscode.commands.executeCommand("typescript.restartTsServer");
-			return vscode.window.showInformationMessage(`TS Server listening on port ${port}.`);
+			const { semantic } = await findTSServerProcesses();
+			return vscode.window.showInformationMessage(`TS Server listening on port ${port}${semantic ? ` (PID: ${semantic.pid})` : ""}.`);
 		} catch {
 			return vscode.window.showWarningMessage(`TS Server was not running. If this window starts TS Server later, it will start listening on port ${port}.`);
 		} finally {
@@ -28,6 +32,16 @@ async function restartWithDebuggingEnabled(brk?: boolean) {
 	} else {
 		await vscode.window.showErrorMessage(`Timeout elapsed prior to discovering an open port to use for debugging.`);
 	}
+}
+
+async function findTSServerProcesses() {
+	const psList = (await import("ps-list")).default;
+	const candidates = (await psList()).filter(p => p.cmd && p.ppid === process.pid && tsserverPattern.test(p.cmd));
+	const syntax = candidates.find(p => syntaxServerPattern.test(p.cmd!));
+	const semantic = candidates.length === 2 && syntax
+		? candidates[+!candidates.indexOf(syntax)]
+		: candidates.find(p => !syntaxServerPattern.test(p.cmd!));
+	return { syntax, semantic };
 }
 
 // this method is called when your extension is deactivated
