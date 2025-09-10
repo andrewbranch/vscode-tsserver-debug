@@ -2,7 +2,7 @@
 	"name": "vscode-tsserver-debug",
 	"displayName": "TS Server Debug",
 	"description": "Adds a command to restart the TypeScript language server process with a debug port open",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"publisher": "andrewbranch",
 	"engines": {
 		"vscode": "^1.41.0"
